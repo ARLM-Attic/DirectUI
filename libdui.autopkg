@@ -1,13 +1,13 @@
 nuget {
     nuspec {
         id: "libdui";
-        version: "0.1.0.0";
+        version: "0.1.0.1";
         title: "DirectUI";
         authors: "Chris Lamberson";
         owners: "Chris Lamberson";
-        licenseUrl: "http://test.com";
-        projectUrl: "http://test.com";
-        iconUrl: "http://test.com";
+        licenseUrl: "http://dui.codeplex.com/license/";
+        projectUrl: "http://dui.codeplex.com/";
+        iconUrl: "about:blank";
         requireLicenseAcceptance: "false";
         summary: "DirectUI eases the use of Direct2D and friends through a traditional Win32 control interface";
         description: @"This library exposes a Win32 control that provides all the boilerplate associated with using the Direct2D API. This includes setup/teardown of a factory and render target for the control's device context, and notifications sent to the parent window for specific events.
