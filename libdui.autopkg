@@ -1,0 +1,52 @@
+nuget {
+    nuspec {
+        id: "libdui";
+        version: "0.1.0.0";
+        title: "DirectUI";
+        authors: "Chris Lamberson";
+        owners: "Chris Lamberson";
+        licenseUrl: "http://test.com";
+        projectUrl: "http://test.com";
+        iconUrl: "http://test.com";
+        requireLicenseAcceptance: "false";
+        summary: "DirectUI eases the use of Direct2D and friends through a traditional Win32 control interface";
+        description: @"This library exposes a Win32 control that provides all the boilerplate associated with using the Direct2D API. This includes setup/teardown of a factory and render target for the control's device context, and notifications sent to the parent window for specific events.
+
+        DirectUI tries to stay out of your way, and exposes no features beyond what you need to get Direct2D running smoothly. It was inspired by the undocumented DIRECTUIHWND that Microsoft uses in it's own software. DirectUI is C89, so there's no frills; it's about as minimal as it gets.";
+        releaseNotes: "Release of DirectUI 0.1 libraries";
+        copyright: "Copyright 2013";
+        tags: {"Win32", "Direct2D", "native"};
+    }
+
+    files {
+        include: {"DUI\dui.h"};
+
+        [x86,v110,debug,desktop] {
+            lib: "Debug\DUI.lib";
+            symbols: "Debug\DUI.pdb";
+            bin: "Debug\DUI.dll";
+        }
+
+        [x86,v110,release,desktop] {
+            lib: "Release\DUI.lib";
+            symbols: "Release\DUI.pdb";
+            bin: "Release\DUI.dll";
+        }
+
+        [x64,v110,debug,desktop] {
+            lib: "x64\Debug\DUI.lib";
+            symbols: "x64\Debug\DUI.pdb";
+            bin: "x64\Debug\DUI.dll";
+        }
+
+        [x64,v110,release,desktop] {
+            lib: "x64\Release\DUI.lib";
+            symbols: "x64\Release\DUI.pdb";
+            bin: "x64\Release\DUI.dll";
+        }
+    }
+
+    targets {
+        Defines += HAS_LIBDUI;
+    };
+}
