@@ -1,0 +1,9 @@
+*
+!.gitignore
+!*.c
+!*.h
+!*.rc
+!*.vcxproj
+!*.filters
+!*.sln
+!*.autopkg
