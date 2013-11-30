@@ -1,7 +1,7 @@
 nuget {
     nuspec {
         id: "libdui";
-        version: "0.1.0.1";
+        version: "0.1.0.2";
         title: "DirectUI";
         authors: "Chris Lamberson";
         owners: "Chris Lamberson";
