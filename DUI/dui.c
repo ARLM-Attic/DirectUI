@@ -5,6 +5,11 @@
 #define RECTWIDTH(rc)  ((rc).right - (rc).left)
 #define RECTHEIGHT(rc) ((rc).bottom - (rc).top)
 
+struct _DUIHDR {
+    NMHDR hdr;
+    ID2D1DCRenderTarget *d2dTarget;
+};
+
 typedef struct _DATA {
     ID2D1Factory *d2dFactory;
     ID2D1DCRenderTarget *d2dTarget;
@@ -29,7 +34,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved) {
     return TRUE;
 }
 
-void DUI_Initialize(void) {
+HRESULT DUI_Initialize(void) {
     WNDCLASSEX wc;
 
     ZeroMemory(&wc, sizeof(WNDCLASSEX));
@@ -40,11 +45,22 @@ void DUI_Initialize(void) {
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
     wc.lpszClassName = WC_DIRECTUI;
 
-    RegisterClassEx(&wc);
+    return RegisterClassEx(&wc) ? S_OK : E_FAIL;
 }
 
-void DUI_Uninitialize(void) {
-    UnregisterClass(WC_DIRECTUI, NULL);
+HRESULT DUI_Uninitialize(void) {
+    return UnregisterClass(WC_DIRECTUI, NULL) ? S_OK : E_FAIL;
+}
+
+HRESULT DUI_GetRenderTarget(PDUIHDR phdrSelf, ID2D1RenderTarget **ppRenderTarget) {
+    HRESULT hr;
+	
+	hr = ID2D1DCRenderTarget_QueryInterface(phdrSelf->d2dTarget, &IID_ID2D1RenderTarget, ppRenderTarget);
+
+	if (FAILED(hr))
+		hr = DUIERR_INTERNAL;
+
+	return hr;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
