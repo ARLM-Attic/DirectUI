@@ -82,8 +82,8 @@ EXTERN_C DUI_API HRESULT DUI_Uninitialize(void);
  * @brief Get the \c ID2D1RenderTarget associated with the DirectUI control.
  *
  * @details This function uses the \c DUIHDR sent by DirectUI notifications to
- *          retrieve a pointer to an \c ID2D1RenderTarget interface which allows
- *          for drawing into the control.
+ *          retrieve a pointer to an \c ID2D1RenderTarget interface which
+ *          allows for drawing into the control.
  *
  * @param[in]  phdrDUI  A pointer to a \c DUIHDR object.
  * @param[out] ppRT     An address of a pointer to the Direct2D render target.
