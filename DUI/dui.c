@@ -45,22 +45,16 @@ HRESULT DUI_Initialize(void) {
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
     wc.lpszClassName = WC_DIRECTUI;
 
-    return RegisterClassEx(&wc) ? S_OK : E_FAIL;
+    return RegisterClassEx(&wc) ? S_OK : DUIERR_INTERNAL;
 }
 
 HRESULT DUI_Uninitialize(void) {
-    return UnregisterClass(WC_DIRECTUI, NULL) ? S_OK : E_FAIL;
+    return UnregisterClass(WC_DIRECTUI, NULL) ? S_OK : DUIERR_INTERNAL;
 }
 
-HRESULT DUI_GetRenderTarget(PDUIHDR phdrSelf, ID2D1RenderTarget **ppRenderTarget) {
-    HRESULT hr;
-	
-	hr = ID2D1DCRenderTarget_QueryInterface(phdrSelf->d2dTarget, &IID_ID2D1RenderTarget, ppRenderTarget);
-
-	if (FAILED(hr))
-		hr = DUIERR_INTERNAL;
-
-	return hr;
+HRESULT DUI_GetRenderTarget(PDUIHDR phdrDUI, ID2D1RenderTarget **ppRT) {
+    return ID2D1DCRenderTarget_QueryInterface(phdrDUI->d2dTarget,
+                                              &IID_ID2D1RenderTarget, ppRT);
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -76,7 +70,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
     switch (msg) {
     case WM_NCCREATE:
-        pd = (PDATA)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(DATA));
+        pd = (PDATA)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
+                              sizeof(DATA));
         SetWindowLongPtr(hWnd, 0, (LONG_PTR)pd);
         lRet = DefWindowProc(hWnd, msg, wParam, lParam);
         break;
@@ -116,7 +111,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 }
 
 HRESULT CreateIndependent(PDATA pd) {
-    return D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &IID_ID2D1Factory, NULL, (LPVOID *)&pd->d2dFactory);
+    return D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED,
+                             &IID_ID2D1Factory, NULL,
+                             (LPVOID *)&pd->d2dFactory);
 }
 
 HRESULT CreateDependent(PDATA pd) {
@@ -131,7 +128,8 @@ HRESULT CreateDependent(PDATA pd) {
     rtp.dpiX = 96.0f;
     rtp.dpiY = 96.0f;
 
-    return ID2D1Factory_CreateDCRenderTarget(pd->d2dFactory, &rtp, &pd->d2dTarget);
+    return ID2D1Factory_CreateDCRenderTarget(pd->d2dFactory, &rtp,
+                                             &pd->d2dTarget);
 }
 
 VOID DestroyIndependent(PDATA pd) {
@@ -160,7 +158,8 @@ LRESULT SendRecreate(HWND hWnd) {
     PrimeNotification(hWnd, DUIN_RECREATE, (LPNMHDR)&hdr);
     hdr.d2dTarget = ((PDATA)GetWindowLongPtr(hWnd, 0))->d2dTarget;
 
-    return SendMessage(GetParent(hWnd), WM_NOTIFY, hdr.hdr.idFrom, (LPARAM)&hdr);
+    return SendMessage(GetParent(hWnd), WM_NOTIFY, hdr.hdr.idFrom,
+                       (LPARAM)&hdr);
 }
 
 LRESULT SendDraw(HWND hWnd) {
@@ -169,5 +168,6 @@ LRESULT SendDraw(HWND hWnd) {
     PrimeNotification(hWnd, DUIN_DRAW, (LPNMHDR)&hdr);
     hdr.d2dTarget = ((PDATA)GetWindowLongPtr(hWnd, 0))->d2dTarget;
 
-    return SendMessage(GetParent(hWnd), WM_NOTIFY, hdr.hdr.idFrom, (LPARAM)&hdr);
+    return SendMessage(GetParent(hWnd), WM_NOTIFY, hdr.hdr.idFrom,
+                       (LPARAM)&hdr);
 }
